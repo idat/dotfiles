@@ -2,13 +2,13 @@
 IFS=$'\n\t'
 
 # Every time this script is modified, the SCRIPT_VERSION must be incremented
-SCRIPT_VERSION="1.0.41"
+SCRIPT_VERSION="1.0.48"
 
 # Get current user's username
 USERNAME=$(whoami)
 
 # User email for git and SSH configuration
-EMAIL="pal@subtree.se"
+EMAIL="ida@subtree.se"
 
 # Record start time
 START_TIME=$(date +%s)
@@ -158,8 +158,8 @@ accept_xcode_license(){
 
 brew_bundle(){
   log "📦 Installing Homebrew packages and casks..."
-  BREW_PKGS=(aws-cdk awscli bash direnv eza ffmpeg fish gh git jq libpq mas maven p7zip pkgconf pnpm postgresql@16 ripgrep subversion wget nx gum yarn)
-  BREW_CASKS=(1password aws-vault beekeeper-studio cloudflare-warp cursor cyberduck devutils discord dropbox dynobase elgato-control-center figma rapidapi font-fira-code font-input font-inter font-jetbrains-mono font-roboto font-geist-mono ghostty google-chrome microsoft-teams mysides orbstack raycast session-manager-plugin slack telegram spotify visual-studio-code zoom chatgpt)
+  BREW_PKGS=(aws-cdk awscli bash direnv eza fish gh git jq libpq mas p7zip pkgconf pnpm postgresql@16 ripgrep subversion wget nx gum yarn)
+  BREW_CASKS=(1password cloudflare-warp cursor cyberduck devutils discord dropbox elgato-control-center figma font-fira-code font-input font-inter font-jetbrains-mono font-roboto font-geist-mono ghostty google-chrome mysides orbstack raycast slack telegram spotify visual-studio-code zoom chatgpt firefox heroic)
   
   # Get list of installed packages and casks once
   INSTALLED_PKGS=$(brew list --formula -1)
@@ -202,23 +202,17 @@ mas_install(){
   fi
   
   # Define apps as a string to avoid issues with spaces in names
-  APPS_STR="Dato:1470584107
-HEIC Converter:1294126402
+  APPS_STR="HEIC Converter:1294126402
 Keynote:409183694
 Magnet:441258766
 Microsoft Excel:462058435
-Microsoft OneNote:784801555
-Microsoft Outlook:985367838
 Microsoft PowerPoint:462062816
-Microsoft To Do:1274495053
 Microsoft Word:462054704
 Numbers:409203825
-OneDrive:823766827
 Pages:409201541
 Pixelmator Pro:1289583905
-TestFlight:899247664
-Valheim:1554294918
-Xcode:497799835"
+Xcode:497799835
+NVIDIA GeForce NOW:1283161959"
 
   # Get list of installed app IDs
   INSTALLED_APP_IDS=$(mas list 2>/dev/null | awk '{print $1}')
@@ -344,10 +338,10 @@ configure_defaults(){
 
   # add favorites if they don't exist
   if ! mysides list | grep -q "Screenshots"; then
-    mysides add Screenshots "file:///Users/${USERNAME}/Library/Mobile%20Documents/com~apple~CloudDocs/Screenshots/2025" || true
+    mysides add Screenshots "file:///Users/${USERNAME}/Library/Mobile%20Documents/com~apple~CloudDocs/Screenshots/Screenshots2025" || true
   fi
-  if ! mysides list | grep -q "Home"; then
-    mysides add Home "file:///Users/${USERNAME}" || true
+  if ! mysides list | grep -q "ida"; then
+    mysides add ida "file:///Users/${USERNAME}/Dropbox/ida" || true
   fi
 
   # Dock
@@ -374,8 +368,8 @@ configure_defaults(){
 
   # Screenshots
   # Save screenshots to iCloud Drive
-  mkdir -p "/Users/${USERNAME}/Library/Mobile Documents/com~apple~CloudDocs/Screenshots/2025" || true
-  defaults write com.apple.screencapture location -string "/Users/${USERNAME}/Library/Mobile Documents/com~apple~CloudDocs/Screenshots/2025" || true
+  mkdir -p "/Users/${USERNAME}/Library/Mobile Documents/com~apple~CloudDocs/Screenshots/Screenshots2025" || true
+  defaults write com.apple.screencapture location -string "/Users/${USERNAME}/Library/Mobile Documents/com~apple~CloudDocs/Screenshots/Screenshots2025" || true
   
   # Save screenshots in PNG format
   defaults write com.apple.screencapture type -string "png" || true
@@ -517,7 +511,7 @@ configure_git(){
   git config --global rerere.autoUpdate true || error "Failed to set rerere.autoUpdate"
   git config --global rerere.enabled true || error "Failed to set rerere.enabled"
   git config --global user.email "${EMAIL}" || error "Failed to set user.email"
-  git config --global user.name "Pål Brattberg" || error "Failed to set user.name"
+  git config --global user.name "Ida Turesson" || error "Failed to set user.name"
 }
 
 install_nvm_node(){
@@ -583,34 +577,26 @@ clone_repos(){
   cd "$BASE" || error "Failed to change to dev directory"
 
   REPOS=(
-    "peasy-master|git@github.com:pal/peasy.git#main"
-    "peasy|git@github.com:pal/peasy.git#planetscale"
-    "frankfurter|git@github.com:pal/frankfurter.git"
-    "peasy_client|git@github.com:pal/peasy_client.git"
-    "peasyv3|git@github.com:pal/peasyv3.git"
-    "peasy-ui|git@github.com:subtree/peasy-ui.git"
-    "saas-template|git@github.com:subtree/saas-template.git"
-    "template-magic-board|git@github.com:subtree/template-magic-board.git"
-    "setup-hosting|git@github.com:subtree/setup-hosting.git"
+    "dotfiles|git@github.com:idat/dotfiles.git"
+    "ai-image-generator|git@github.com:idat/ai-image-generator.git"
+    "app.juniormarketer.ai|git@github.com:subtree/app.juniormarketer.ai.git"
+    "bildfixare|git@github.com:subtree/bildfixare.git"
+    "blogify-ai-sheets-magic|git@github.com:subtree/blogify-ai-sheets-magic.git"
     "companynamemaker.com|git@github.com:subtree/companynamemaker.com.git"
-    "juniormarketer.ai|git@github.com:subtree/juniormarketer.ai.git"
-    "social-image-creator|git@github.com:subtree/social-image-creator.git"
-    "saas-template-upptime|git@github.com:subtree/saas-template-upptime.git"
-    "subtree-sites|git@github.com:subtree/subtree-sites.git"
-    "subtree.se|git@github.com:subtree/subtree.se.git"
+    "figma-plugin|git@github.com:subtree/figma-plugin.git"
+    "get-baked|git@github.com:subtree/get-baked.git"
+    "image-springboard-glow|git@github.com:subtree/image-springboard-glow.git"
     "jujino.com|git@github.com:subtree/jujino.com.git"
-    "julafton.com|git@github.com:subtree/julafton.com.git"
-    "mac-setup-script|git@github.com:pal/mac-setup-script.git"
-    "palbrattberg.com|git@github.com:pal/palbrattberg.com.git"
-    "ai-pres|git@github.com:pal/ai-pres.git"
-    "deep-research|git@github.com:pal/deep-research.git"
-    "domainchecker|git@github.com:pal/domainchecker.git"
-    "mousegame|git@github.com:pal/mousegame.git"
-    "k8s-hosting|git@github.com:subtree/k8s-hosting.git"
-    "bolt.diy|git@github.com:stackblitz-labs/bolt.diy.git"
-    "opencontrol|git@github.com:toolbeam/opencontrol.git"
-    # "productvoice|git@github.com:WeDoProducts/productvoice.git"
-    # "covid-containment|git@github.com:Shpigford/covid-containment.git"
+    "juniormarketer.ai|git@github.com:subtree/juniormarketer.ai.git"
+    "kokbok|git@github.com:subtree/kokbok.git"
+    "new-company-name|git@github.com:subtree/new-company-name.git"
+    "peasyv3|git@github.com:pal/peasyv3.git"
+    "png-to-css-creator|git@github.com:subtree/png-to-css-creator.git"
+    "social-image-creator|git@github.com:subtree/social-image-creator.git"
+    "subtree-se|git@github.com:subtree/subtree-se.git"
+    "subtree.se|git@github.com:subtree/subtree.se.git"
+    "svg-to-html-magic|git@github.com:subtree/svg-to-html-magic.git"
+    "template-magic-board|git@github.com:subtree/template-magic-board.git"
   )
 
   for entry in "${REPOS[@]}"; do
@@ -639,12 +625,14 @@ post_install(){
   log "   • Google Chrome" 
   log "   • Magnet"
   log "   • Slack"
-  log "   • Outlook"
-  log "   • Teams"
   log "   • Spotify"
   log "   • Cursor"
-  log "   • RapidAPI"
-  log "2. Configure Dropbox selective sync."
+  log "2. Configure Dropbox selective sync with the following folders:"
+  log "   • ~/2023-11_IdaBackupMac"
+  log "   • ~/2025-06_IdaBackup"
+  log "   • ~/Mackup"
+  log "   • ~/ida"
+  log "   • ~/Privat"
 }
 
 prevent_sleep(){
@@ -767,59 +755,69 @@ install_bun(){
   fi
 }
 
-install_aws_vault_latest(){
-  log "🔒 Ensuring latest aws-vault from GitHub..."
+install_adobe_creative_cloud(){
+  log "🎨 Setting up Adobe Creative Cloud..."
   
-  # Check if aws-vault is already installed and working
-  if command -v aws-vault &>/dev/null && aws-vault --version &>/dev/null; then
-    local current_version
-    current_version=$(aws-vault --version | awk '{print $3}')
-    log "aws-vault already installed (version $current_version)"
-    
-    # Check if we need to update
-    local latest_version
-    local arch
-    arch=$(uname -m)
-    if [[ "$arch" == "arm64" ]]; then
-      latest_version=$(curl -s https://api.github.com/repos/99designs/aws-vault/releases/latest | grep browser_download_url | grep darwin-arm64 | cut -d '"' -f 4 | rev | cut -d '/' -f 1 | rev | sed 's/aws-vault-v//' | sed 's/-darwin-arm64//')
-    else
-      latest_version=$(curl -s https://api.github.com/repos/99designs/aws-vault/releases/latest | grep browser_download_url | grep darwin-amd64 | cut -d '"' -f 4 | rev | cut -d '/' -f 1 | rev | sed 's/aws-vault-v//' | sed 's/-darwin-amd64//')
-    fi
-    
-    if [[ "$current_version" == "$latest_version" ]]; then
-      log "aws-vault is already at the latest version"
-      return 0
-    fi
+  # Check if Adobe Creative Cloud is already installed
+  if [[ -d "/Applications/Adobe Creative Cloud" ]] || [[ -d "/Applications/Utilities/Adobe Creative Cloud" ]]; then
+    log "Adobe Creative Cloud already installed"
+    return 0
   fi
   
-  # Get latest release URL for macOS arm64 or amd64
-  local arch
-  arch=$(uname -m)
-  local asset_url
-  if [[ "$arch" == "arm64" ]]; then
-    asset_url=$(curl -s https://api.github.com/repos/99designs/aws-vault/releases/latest | grep browser_download_url | grep darwin-arm64 | cut -d '"' -f 4)
+  # Create temporary directory for download
+  local temp_dir
+  temp_dir=$(mktemp -d)
+  
+  # Download Adobe Creative Cloud installer
+  log "Downloading Adobe Creative Cloud installer..."
+  local download_url="https://ccmdls.adobe.com/AdobeProducts/KCCC/1/OSX10-64/ACCCx4_4_0_468.dmg"
+  local installer_path="$temp_dir/AdobeCreativeCloud.dmg"
+  
+  if ! curl -L -o "$installer_path" "$download_url"; then
+    error "Failed to download Adobe Creative Cloud installer"
+    rm -rf "$temp_dir"
+    return 1
+  fi
+  
+  # Mount the DMG
+  log "Mounting installer..."
+  local mount_point
+  mount_point=$(hdiutil attach "$installer_path" | grep "/Volumes" | awk '{print $3}')
+  
+  if [[ -z "$mount_point" ]]; then
+    error "Failed to mount Adobe Creative Cloud installer"
+    rm -rf "$temp_dir"
+    return 1
+  fi
+  
+  # Find and install the installer
+  local installer_app
+  installer_app=$(find "$mount_point" -name "*.pkg" -o -name "Install.app" | head -1)
+  
+  if [[ -z "$installer_app" ]]; then
+    error "Could not find Adobe Creative Cloud installer in mounted image"
+    hdiutil detach "$mount_point" 2>/dev/null || true
+    rm -rf "$temp_dir"
+    return 1
+  fi
+  
+  # Install Adobe Creative Cloud
+  log "Installing Adobe Creative Cloud..."
+  if [[ "$installer_app" == *.pkg ]]; then
+    sudo installer -pkg "$installer_app" -target / || error "Failed to install Adobe Creative Cloud"
   else
-    asset_url=$(curl -s https://api.github.com/repos/99designs/aws-vault/releases/latest | grep browser_download_url | grep darwin-amd64 | cut -d '"' -f 4)
+    open "$installer_app" || error "Failed to open Adobe Creative Cloud installer"
+    log "Adobe Creative Cloud installer opened. Please complete the installation manually."
   fi
   
-  if [[ -z "$asset_url" ]]; then
-    error "Could not find aws-vault release for your architecture"
-    return 1
-  fi
+  # Clean up
+  hdiutil detach "$mount_point" 2>/dev/null || true
+  rm -rf "$temp_dir"
   
-  # Download and install
-  tmpfile=$(mktemp)
-  curl -L "$asset_url" -o "$tmpfile" || { error "Failed to download aws-vault"; return 1; }
-  chmod +x "$tmpfile"
-  sudo mv "$tmpfile" /usr/local/bin/aws-vault || { error "Failed to move aws-vault to /usr/local/bin"; return 1; }
-  
-  # Verify installation
-  if ! aws-vault --version &>/dev/null; then
-    error "aws-vault installation failed - could not verify installation"
-    return 1
-  fi
-  
-  log "aws-vault installed/updated to latest release"
+  log "Adobe Creative Cloud installation initiated."
+  log "After installation, you'll need to:"
+  log "1. Sign in with your Adobe ID"
+  log "2. Install individual apps (Illustrator, Photoshop, etc.) through Creative Cloud"
 }
 
 main(){
@@ -828,7 +826,6 @@ main(){
   install_homebrew
   accept_xcode_license
   brew_bundle
-  install_aws_vault_latest
   install_bun
   check_manual_steps
   mas_install
@@ -840,6 +837,7 @@ main(){
   install_nvm_node
   setup_ssh_keys
   clone_repos
+  install_adobe_creative_cloud
   post_install
   
   # Calculate and display duration
